@@ -1,0 +1,128 @@
+--EXEMPLO SQL SERVER - MICROSOFT SQL SERVER Management Studio
+
+--Na janela aparece usuário sa
+--Digite a senha uninove minúscula
+--Escolha Nova Consulta no menu
+drop table eng;
+create table eng(id_eng integer  primary key,
+nome varchar(20)  not null)
+
+insert into eng values(3,'luiz c')
+
+update eng set nome='luiz kk' 
+where id_eng=3
+
+select * from eng
+
+--TABELAS FRIND JOBS
+--APAGANDO TABELAS CRIADAS
+DROP TABLE cidade_vagas;
+DROP TABLE endereco_cand CASCADE;
+DROP TABLE genero_cand CASCADE;
+DROP TABLE plano CASCADE;
+DROP TABLE tipo_vaga ;
+DROP TABLE vagas CASCADE;
+DROP TABLE candidato CASCADE;
+DROP TABLE empresa CASCADE;
+--CIDADE_VAGAS
+create table cidade_vagas (
+id_cid NUMERIC(10) not null,
+cidade VARCHAR(50) not null,
+uf char(2)
+);
+
+--ENDERECO_CAND
+create table endereco_cand (
+id_end NUMERIC(10) not null,
+rua VARCHAR(100),
+numero NUMERIC(10),
+complemento VARCHAR(100),
+cep NUMERIC(8),
+cidade VARCHAR(100),
+estado char(2)
+);
+
+--GENERO_CAND
+create table genero_cand (
+id_gen NUMERIC(10) not null,
+tipo_gen VARCHAR(10),
+letra_gen char(1)
+);
+
+--PLANO
+create table plano (
+id_plano NUMERIC(10) not null,
+nome_plano VARCHAR(20),
+valor decimal(10,2)
+);
+
+--TIPO_VAGA
+create table tipo_vaga (
+id_tipo NUMERIC(10) not null,
+desc_tipo VARCHAR(10)
+);
+
+--VAGAS
+create table vagas (
+id_vaga NUMERIC(10) not null,
+id_tipo NUMERIC(10) not null,
+cargo VARCHAR(255) not null,
+desc_text VARCHAR(1000),
+nivel VARCHAR(50),
+cidade_vaga VARCHAR(100),
+uf_vaga char(2),
+quant_vagas NUMERIC(20),
+salario decimal(10,2)
+);
+
+--CANDIDATO
+create table candidato (
+id_cand NUMERIC(10) not null,
+id_gen NUMERIC(10) not null,
+id_end nchar varying(10) not null,
+nome_completo VARCHAR(255),
+genero char(1),
+dt_nasc date,
+usuario VARCHAR(100),
+senha VARCHAR(15),
+email VARCHAR(255),
+conf_email VARCHAR(255),
+cpf NUMERIC(11)
+);
+
+--EMPRESA
+create table empresa (
+id_emp NUMERIC(10) not null,
+id_plano NUMERIC(10) not null,
+id_vaga NUMERIC(10) not null,
+id_tipo NUMERIC(10) not null,
+id_cid NUMERIC(10) not null,
+cnpj NUMERIC(14),
+razao_social VARCHAR(255),
+nome_fantasia VARCHAR(255),
+nome_contato VARCHAR(255),
+email VARCHAR(100),
+telefone NUMERIC(10),
+cidade VARCHAR(100),
+uf char(2),
+cep VARCHAR(8),
+login VARCHAR(50),
+senha VARCHAR(16)
+);
+--CRIANDO CHAVES PRIMÁRIAS
+alter table cidade_vagas add constraint pk_cidade_vagas primary key (id_cid);
+alter table endereco_cand add constraint pk_endereco_cand primary key (id_end);
+alter table genero_cand add constraint pk_genero_cand primary key (id_gen);
+alter table plano add constraint pk_plano primary key (id_plano);
+alter table tipo_vaga add constraint pk_tipo_vaga primary key (id_tipo);
+alter table vagas add constraint pk_vagas primary key (id_vaga,id_tipo);
+alter table candidato add constraint pk_candidato primary key (id_cand,id_gen,id_end);
+alter table empresa add constraint pk_empresa primary key (id_emp,id_plano,id_vaga,id_tipo,id_cid);
+
+--CRIANDO CHAVES ESTRANGEIRAS
+alter table vagas add constraint fk_vagas_0 foreign key (id_tipo) references tipo_vaga (id_tipo);
+alter table candidato add constraint fk_candidato_0 foreign key (id_gen) references genero (id_gen);
+alter table candidato add constraint fk_candidato_1 foreign key (id_end) references endereco_cand (id_end);
+alter table empresa add constraint fk_empresa_0 foreign key (id_plano) references plano (id_plano);
+alter table empresa add constraint fk_empresa_1 foreign key (id_vaga,id_tipo) references vagas (id_vaga,id_tipo);
+alter table empresa add constraint fk_empresa_2 foreign key (id_cid) references cidade_vagas (id_cid);
